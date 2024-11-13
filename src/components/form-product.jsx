@@ -11,8 +11,10 @@ import {
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { z } from "zod";
 import { useShoppingContext } from "../context/useShopping";
+import { addProductFetch } from "../domain/add-product-fetch";
 
 const formSchema = z.object({
   color: z.number({ invalid_type_error: "Se tiene que seleccionar un color" }),
@@ -33,23 +35,19 @@ export function FormProduct({ colors, storages, idProduct }) {
     },
   });
 
-  function onSubmit(values) {
-    fetch("https://itx-frontend-test.onrender.com/api/cart", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
+  async function onSubmit(values) {
+    try {
+      await addProductFetch({
         id: idProduct,
         colorCode: values.color,
         storageCode: values.storage,
-      }),
-    })
-      .then((res) => res.json())
-      .then(() => {
-        form.reset();
-        addProduct();
       });
+      form.reset();
+      addProduct();
+      toast("Se agrego correctamente el producto");
+    } catch {
+      toast.error("No se pudo agregar el producto");
+    }
   }
 
   return (
@@ -123,7 +121,9 @@ export function FormProduct({ colors, storages, idProduct }) {
             </FormItem>
           )}
         />
-        <Button type="submit">Agregar</Button>
+        <Button type="submit" disabled={form.formState.isSubmitting}>
+          Agregar
+        </Button>
       </form>
     </Form>
   );
