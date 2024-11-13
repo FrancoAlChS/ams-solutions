@@ -32,7 +32,7 @@ Para comenzar a trabajar con el proyecto en tu máquina local, sigue estos pasos
 Primero, clona el repositorio en tu máquina local usando Git:
 
 ```bash
-git clone https://github.com/tu-usuario/tienda-moviles.git
+git clone https://github.com/FrancoAlChS/ams-solutions.git
 ```
 
 ### 2. Instalar las dependencias
