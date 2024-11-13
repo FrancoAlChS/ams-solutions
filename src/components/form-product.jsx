@@ -12,6 +12,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { useShoppingContext } from "../context/useShopping";
 
 const formSchema = z.object({
   color: z.number({ invalid_type_error: "Se tiene que seleccionar un color" }),
@@ -22,6 +23,8 @@ const formSchema = z.object({
 });
 
 export function FormProduct({ colors, storages, idProduct }) {
+  const { addProduct } = useShoppingContext();
+
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -43,7 +46,10 @@ export function FormProduct({ colors, storages, idProduct }) {
       }),
     })
       .then((res) => res.json())
-      .then((res) => localStorage.setItem("shopping", res.count));
+      .then(() => {
+        form.reset();
+        addProduct();
+      });
   }
 
   return (
@@ -58,7 +64,7 @@ export function FormProduct({ colors, storages, idProduct }) {
               <FormControl>
                 <RadioGroup
                   onValueChange={field.onChange}
-                  defaultValue={field.value}
+                  value={field.value}
                   className="flex gap-4"
                 >
                   {colors.map((color) => (
@@ -93,7 +99,7 @@ export function FormProduct({ colors, storages, idProduct }) {
               <FormControl>
                 <RadioGroup
                   onValueChange={field.onChange}
-                  defaultValue={field.value}
+                  value={field.value}
                   className="flex gap-4"
                 >
                   {storages.map((storage) => (
