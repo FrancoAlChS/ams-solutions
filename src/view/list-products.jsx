@@ -10,6 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useQuery } from "@tanstack/react-query";
 import { OctagonAlert, Search } from "lucide-react";
+import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { Header } from "../components/header";
 
@@ -25,6 +26,20 @@ export function ListProducts() {
         res.json()
       ),
   });
+
+  const [search, setSearch] = useState("");
+
+  const filterProducts = useMemo(() => {
+    if (!products) return undefined;
+    return products.filter(
+      (product) =>
+        product.model
+          .trim()
+          .toUpperCase()
+          .includes(search.trim().toUpperCase()) ||
+        product.brand.trim().toUpperCase().includes(search.trim().toUpperCase())
+    );
+  }, [products, search]);
 
   return (
     <div className="min-h-screen bg-background">
@@ -45,7 +60,12 @@ export function ListProducts() {
           <h1 className="text-xl font-semibold">Listado de productos</h1>
           <div className="relative w-full md:w-80">
             <Search className="absolute left-2 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
-            <Input placeholder="Buscar productos..." className="pl-8" />
+            <Input
+              placeholder="Buscar productos..."
+              className="pl-8"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
           </div>
         </div>
 
@@ -74,17 +94,17 @@ export function ListProducts() {
 
         {!isLoading && !error && (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {products.map((product) => (
+            {filterProducts.map((product) => (
               <Link
                 key={`producto${product.id}`}
                 to={`/producto/${product.id}`}
               >
                 <Card className="cursor-pointer">
-                  <CardContent className="py-2">
+                  <CardContent className="py-2 ">
                     <img
                       src={product.imgUrl}
                       alt={`Producto-${product.id}`}
-                      className="w-full h-64 object-contain"
+                      className="h-64 mx-auto object-contain"
                     />
                   </CardContent>
                   <CardFooter className="justify-between items-end">
