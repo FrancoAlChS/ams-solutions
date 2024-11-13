@@ -20,4 +20,7 @@ const localStoragePersister = createSyncStoragePersister({
 persistQueryClient({
   queryClient,
   persister: localStoragePersister,
+  dehydrateOptions: {
+    shouldDehydrateQuery: (query) => query.queryKey[0] !== "product",
+  },
 });
