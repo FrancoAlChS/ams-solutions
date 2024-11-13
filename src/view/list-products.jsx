@@ -1,24 +1,30 @@
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/Alert";
 import {
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbList,
   BreadcrumbPage,
 } from "@/components/ui/Breadcrumb";
-import { Card, CardContent, CardFooter } from "@/components/ui/Card";
+import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Search } from "lucide-react";
-import { useEffect, useState } from "react";
+import { Skeleton } from "@/components/ui/skeleton";
+import { useQuery } from "@tanstack/react-query";
+import { OctagonAlert, Search } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Header } from "../components/header";
 
 export function ListProducts() {
-  const [products, setProducts] = useState([]);
-
-  useEffect(() => {
-    fetch("https://itx-frontend-test.onrender.com/api/product")
-      .then((res) => res.json())
-      .then((res) => setProducts(res));
-  }, []);
+  const {
+    data: products,
+    error,
+    isLoading,
+  } = useQuery({
+    queryKey: ["products"],
+    queryFn: () =>
+      fetch("https://itx-frontend-test.onrender.com/api/product").then((res) =>
+        res.json()
+      ),
+  });
 
   return (
     <div className="min-h-screen bg-background">
@@ -43,32 +49,60 @@ export function ListProducts() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {products.map((product) => (
-            <Link key={`producto${product.id}`} to={`/producto/${product.id}`}>
-              <Card className="cursor-pointer">
-                <CardContent className="py-2">
-                  <img
-                    src={product.imgUrl}
-                    alt={`Producto-${product.id}`}
-                    className="w-full h-64 object-contain"
-                  />
-                </CardContent>
-                <CardFooter className="justify-between items-end">
-                  <div className="flex flex-col gap-2">
-                    <span className="text-sm text-stone-500">
-                      {product.brand.toUpperCase()}
+        {!isLoading && error && (
+          <Alert variant="destructive">
+            <OctagonAlert className="h-4 w-4" />
+            <AlertTitle>Ups!</AlertTitle>
+            <AlertDescription>
+              No se pudo obtener los productos
+            </AlertDescription>
+          </Alert>
+        )}
+
+        {isLoading && (
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            {Array(8)
+              .fill(0)
+              .map((_, i) => (
+                <Skeleton
+                  key={`skeleton-${i}`}
+                  className="h-[354px] rounded-xl"
+                />
+              ))}
+          </div>
+        )}
+
+        {!isLoading && !error && (
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            {products.map((product) => (
+              <Link
+                key={`producto${product.id}`}
+                to={`/producto/${product.id}`}
+              >
+                <Card className="cursor-pointer">
+                  <CardContent className="py-2">
+                    <img
+                      src={product.imgUrl}
+                      alt={`Producto-${product.id}`}
+                      className="w-full h-64 object-contain"
+                    />
+                  </CardContent>
+                  <CardFooter className="justify-between items-end">
+                    <div className="flex flex-col gap-2">
+                      <span className="text-sm text-stone-500">
+                        {product.brand.toUpperCase()}
+                      </span>
+                      <span className="font-bold text-lg">{product.model}</span>
+                    </div>
+                    <span className="font-semibold">
+                      ${Number(product.price).toFixed(2)}
                     </span>
-                    <span className="font-bold text-lg">{product.model}</span>
-                  </div>
-                  <span className="font-semibold">
-                    ${Number(product.price).toFixed(2)}
-                  </span>
-                </CardFooter>
-              </Card>
-            </Link>
-          ))}
-        </div>
+                  </CardFooter>
+                </Card>
+              </Link>
+            ))}
+          </div>
+        )}
       </main>
     </div>
   );
