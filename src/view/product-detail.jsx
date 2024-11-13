@@ -21,6 +21,7 @@ import {
   Weight,
 } from "lucide-react";
 import { useParams } from "react-router-dom";
+import { FormProduct } from "../components/form-product";
 import { Header } from "../components/header";
 import { Property } from "../components/property";
 
@@ -87,6 +88,7 @@ export function ProductDetail() {
             />
 
             <div>
+              {/* TITULO */}
               <div className="flex justify-between mb-8">
                 <div>
                   <p className=" text-stone-500">
@@ -99,6 +101,7 @@ export function ProductDetail() {
                 </p>
               </div>
 
+              {/* PROPIEDADES */}
               <div className="flex flex-col gap-3">
                 <Property
                   icon={<Cpu className="size-5 mr-2 font-bold" />}
@@ -144,6 +147,15 @@ export function ProductDetail() {
                   icon={<Weight className="size-5 mr-2 font-bold" />}
                   name="Peso"
                   value={product.weight}
+                />
+              </div>
+
+              {/* OPCIONES */}
+              <div className="mt-8">
+                <FormProduct
+                  colors={product.options.colors}
+                  idProduct={id}
+                  storages={product.options.storages}
                 />
               </div>
             </div>
