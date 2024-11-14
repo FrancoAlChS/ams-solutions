@@ -80,7 +80,7 @@ export function ProductDetail() {
         )}
 
         {!isLoading && !error && (
-          <div className="grid grid-cols-2">
+          <div className="grid grid-cols-1 md:grid-cols-2">
             <img
               src={product.imgUrl}
               alt=""
@@ -89,7 +89,7 @@ export function ProductDetail() {
 
             <div>
               {/* TITULO */}
-              <div className="flex justify-between mb-8">
+              <div className="flex justify-between mt-8 mb-8">
                 <div>
                   <p className=" text-stone-500">
                     {product.brand.toUpperCase()}

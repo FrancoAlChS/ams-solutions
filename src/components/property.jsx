@@ -4,7 +4,7 @@ import { Separator } from "@/components/ui/Separator";
 export function Property({ icon, name, value }) {
   return (
     <>
-      <p className="flex justify-between text-sm">
+      <p className="flex justify-between text-sm flex-col gap-2 sm:flex-row sm:gap-0">
         <span className="flex items-center ">
           {icon} {name}
         </span>
