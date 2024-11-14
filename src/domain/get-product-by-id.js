@@ -3,6 +3,7 @@ export async function getProductById(id) {
     `https://itx-frontend-test.onrender.com/api/product/${id}`
   );
   const data = await response.json();
+  if (data.code === 0) throw new Error("No se encontro el producto");
 
   return {
     imgUrl: isEmpty(data.imgUrl),
