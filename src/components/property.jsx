@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 import { Separator } from "@/components/ui/Separator";
 
 export function Property({ icon, name, value }) {

@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ShoppingCart } from "lucide-react";
