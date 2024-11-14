@@ -24,6 +24,7 @@ import { useParams } from "react-router-dom";
 import { FormProduct } from "../components/form-product";
 import { Header } from "../components/header";
 import { Property } from "../components/property";
+import { getProductById } from "../domain/get-product-by-id";
 
 export function ProductDetail() {
   const { id } = useParams();
@@ -38,10 +39,7 @@ export function ProductDetail() {
     staleTime: "infinity",
     meta: { cache: false },
 
-    queryFn: () =>
-      fetch(`https://itx-frontend-test.onrender.com/api/product/${id}`).then(
-        (res) => res.json()
-      ),
+    queryFn: () => getProductById(id),
   });
 
   return (
@@ -96,9 +94,7 @@ export function ProductDetail() {
                   </p>
                   <p className="font-bold text-2xl">{product.model}</p>
                 </div>
-                <p className="text-2xl text-blue-500">
-                  ${Number(product.price).toFixed(2)}
-                </p>
+                <p className="text-2xl text-blue-500">${product.price}</p>
               </div>
 
               {/* PROPIEDADES */}
@@ -111,7 +107,7 @@ export function ProductDetail() {
                 <Property
                   icon={<MemoryStick className="size-5 mr-2 font-bold" />}
                   name="RAM"
-                  value={product.ram.split("-")[0].trim()}
+                  value={product.ram}
                 />
                 <Property
                   icon={<Smartphone className="size-5 mr-2 font-bold" />}
@@ -131,12 +127,12 @@ export function ProductDetail() {
                 <Property
                   icon={<Camera className="size-5 mr-2 font-bold" />}
                   name="Cámara primaria"
-                  value={product.primaryCamera[0]}
+                  value={product.primaryCamera}
                 />
                 <Property
                   icon={<Camera className="size-5 mr-2 font-bold" />}
                   name="Cámara secundaria"
-                  value={product.secondaryCmera}
+                  value={product.secondaryCamera}
                 />
                 <Property
                   icon={<Ruler className="size-5 mr-2 font-bold" />}
@@ -153,9 +149,9 @@ export function ProductDetail() {
               {/* OPCIONES */}
               <div className="mt-8">
                 <FormProduct
-                  colors={product.options.colors}
+                  colors={product.colors}
                   idProduct={id}
-                  storages={product.options.storages}
+                  storages={product.storages}
                 />
               </div>
             </div>
